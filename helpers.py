@@ -63,3 +63,60 @@ def genre_distribution_over_month(df, genre, film_counts_month, split_year, when
 
     # Show the plots
     plt.show()
+
+
+    
+    
+    
+def visu_P2(df, split_year, genre):
+    #reducing colums to see clearly
+    df_genres = df[['Movie name','genre 1', 'genre 2', 'Movie release month', 'Movie release year']]
+    #after split year
+    df_after=df_genres[df_genres['Movie release year']>=split_year]  #After 1990 42k -> 20k
+    film_counts_month = df_after['Movie release month'].value_counts().sort_index() #film by month for ratio
+    df_selected_gender2=df[(df['genre 1'] == genre ) | (df['genre 2'] == genre)] #selecting genre
+
+    df_selected_gender=df_after[(df_after['genre 1'] == genre ) | (df_after['genre 2'] == genre)] #selecting genre
+    genre_distrib = df_selected_gender.groupby('Movie release month').count()['Movie name'] #genre distrib over months
+    
+    
+    genre_counts = df_selected_gender2.groupby('Movie release year').size() # Count number of movie of a specific genre in every year
+    
+     # Create the first subplot for the bar plot
+    
+    plt.figure(figsize=(6,6))
+    plt.subplot(3,1,1)
+    genre_counts.plot(kind='line', color='skyblue')
+    plt.title(f'Number of {genre} movies in every year ')
+    plt.xlabel('Year')
+    plt.ylabel('Number of movies')
+   
+
+   
+    plt.subplot(3, 1, 2)
+    plt.bar(genre_distrib.index, genre_distrib.values, color='orange')
+    plt.title(f'Number of {genre} movie per month after {split_year}')
+    plt.ylabel(f'Number of {genre} movie')
+    plt.grid()
+
+    # Create the second subplot for the line plot
+    plt.subplot(3, 1, 3)
+    plt.bar(film_counts_month.index, genre_distrib.values/film_counts_month.values, color='blue')
+    plt.title(f'Number of {genre} movie per month after {split_year}')
+    plt.xlabel('Release month')
+    plt.ylabel(f'ratio of {genre} movies ')
+    plt.grid()
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show the plots
+    plt.show()
+    
+  
+    
+    
+
+    
+
+        
