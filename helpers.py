@@ -6,7 +6,6 @@ import ast
 
 
 
-
 def visualizing_data(df, split_year, genre):
     #reducing colums to see clearly
     df_genres = df[['Movie name','genre 1', 'genre 2', 'Movie release month', 'Movie release year']]
@@ -33,7 +32,7 @@ def genre_distribution_over_month(df, genre, film_counts_month, split_year, when
     df_selected_gender=df[(df['genre 1'] == genre ) | (df['genre 2'] == genre)] #selecting genre
     genre_distrib = df_selected_gender.groupby('Movie release month').count()['Movie name'] #genre distrib over months
     
-     # Create the first subplot for the bar plot
+    # Create the first subplot for the bar plot
     plt.figure(figsize=(4,3))
     plt.subplot(2, 1, 1)
     plt.bar(genre_distrib.index, genre_distrib.values, color='orange')

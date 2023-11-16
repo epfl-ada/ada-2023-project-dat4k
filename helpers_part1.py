@@ -5,6 +5,33 @@ import json
 import ast
 from datetime import datetime
 
+### Part 2.1) Link between horror movies and moth of release
+
+def genre_distribution_over_month(df, genre, film_counts_month):  #df_genres, #Drama, #film_counts_month
+    df_selected_gender=df[(df['genre 1'] == genre ) | (df['genre 2'] == genre)] #selecting genre
+    genre_distrib = df_selected_gender.groupby('Movie release month').count()['Movie name'] #genre distrib over months
+    
+    # Create the first subplot for the bar plot
+    plt.subplot(2, 1, 1)
+    plt.bar(genre_distrib.index, genre_distrib.values, color='orange')
+    plt.title(f'Number of {genre} movie per Month for all Years')
+    plt.ylabel(f'Number of {genre} movie')
+    plt.grid()
+
+    # Create the second subplot for the line plot
+    plt.subplot(2, 1, 2)
+    plt.bar(film_counts_month.index, genre_distrib.values/film_counts_month.values, color='blue')
+    plt.title(f'ratio of {genre} movie over film count by month')
+    plt.xlabel('Release Month')
+    plt.ylabel(f'ratio of {genre} movies ')
+    plt.grid()
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show the plots
+    plt.show()
+
 ### Part 1.3) Processing the genre column
 
 # 1.3.1) Gathering all genres and their occurrences
