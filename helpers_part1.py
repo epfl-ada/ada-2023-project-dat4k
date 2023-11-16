@@ -81,7 +81,7 @@ def main_genres_cluster(genres_lexical_field,nb_genres):
 
 # 1.3.3) Assigning up to 2 main genres to each movie
 
-def reshape_genres_column(df,main_genres):
+def reshape_genre_column(df,main_genres):
     # Deep copy
     df_clean_genre = df.copy(deep=True)
     # Create empty column for 2 main genres
@@ -107,5 +107,8 @@ def reshape_genres_column(df,main_genres):
                             if (df_clean_genre['genre 1'].iloc[index] == None and df_clean_genre['genre 2'].iloc[796] == None):
                                     df_clean_genre['genre 1'].iloc[index] = main_genres[boolarr]['main name'].iloc[0]
                                     df_clean_genre['genre 2'].iloc[index] = main_genres[boolarr]['main name'].iloc[1]
+    # Drop the 'Movie genres' column
+    df_clean_genre = df_clean_genre.drop(columns=['Movie genres'])
+
     return df_clean_genre
 
