@@ -5,6 +5,98 @@ import seaborn as sns
 import json 
 import ast
  
+def select_years(df):
+    # Drop nan values
+    df = df.dropna(subset=['Movie release date'])
+    # Add release year column
+    df['Movie release year'] = df['Movie release date'].str[0:4]
+    # Convert to numeric values
+    df['Movie release year'] = pd.to_numeric(df['Movie release year'], errors='raise') 
+    # Sort the movies by ascending order of release year
+    df = df.sort_values('Movie release year', ascending=True) 
+    # Drop the first row which has an error in the release year (1010)
+    df = df.drop(df[df['Movie release year'] == 1010].index)
+    # Reset the indexation 
+    df = df.reset_index(drop = True)
+
+    return df
+
+def plot_percentage_missing_month_per_year(df):
+    percentage = lambda x: (x.astype(str).apply(len) < 5).mean() * 100
+
+    missing_data_percentage = df.groupby('Movie release year')['Movie release date'].apply(percentage)
+
+    plt.plot(missing_data_percentage.index, missing_data_percentage.values, marker='.')
+    plt.title('Percentage of missing month per year')
+    plt.xlabel('Year')
+    plt.ylabel('Percentage missing [%]')
+    plt.show()
+
+def dataframe_with_months (df):
+    # Remove the row which don't have the month of release
+    df = df[df['Movie release date'].str.len() > 4]
+    # Reset the indexation 
+    df = df.reset_index(drop = True)
+    return df
+
+def nmbr_movie_years (df1,df2):
+    # Counting number of movie per year
+    film_counts_year = df1['Movie release year'].value_counts().sort_index()
+    # Counting number of movie with month release per year
+    film_counts_year_without_missing_months = df2['Movie release year'].value_counts().sort_index()
+
+    # Plot the number of movies per year
+    plt.subplot(1, 2, 1)
+
+    plt.bar(film_counts_year.index, film_counts_year.values, color='orange')
+    plt.title('Number of movie per year')
+    plt.xlabel('Release year')
+    plt.ylabel('Number of movie')
+    plt.grid()
+
+    # Plot the number of movies per year
+    plt.subplot(1, 2, 2)
+
+    plt.bar(film_counts_year_without_missing_months.index, film_counts_year_without_missing_months.values, color='orange')
+    plt.title('Number of movie per year\nwith month release')
+    plt.xlabel('Release year')
+    plt.ylabel('Number of movie')
+    plt.grid()
+
+    # Set the same Y-axis limits for both subplots
+    plt.ylim(min(min(film_counts_year.values), min(film_counts_year_without_missing_months.values)),
+            max(max(film_counts_year.values), max(film_counts_year_without_missing_months.values)))
+
+    # Adjust layout
+    plt.tight_layout()
+    # Show the plots
+    plt.show()
+
+def select_main_years(df1,df2):
+    film_counts_year_without_missing_months = df2['Movie release year'].value_counts().sort_index()
+    years_under_200 = film_counts_year_without_missing_months.index[film_counts_year_without_missing_months.values > 200]
+    df1 = df1[df1['Movie release year'].isin(years_under_200)]
+    return df1
+
+def clean_date_and_season (df):
+    # Create a column with only the release month 
+    df['Movie release month'] = df['Movie release date'].str[5:7]
+    #Convert to numeric the release months
+    df['Movie release month'] = pd.to_numeric(df['Movie release month'], errors='raise') 
+
+    # Sort the movies by ascending order of release year
+    df = df.sort_values('Movie release year', ascending=True) 
+
+    # Remove the Movie release date column
+    df = df.drop(columns=['Movie release date'])
+
+    # Reset the indexation 
+    df = df.reset_index(drop = True) 
+
+    # Add the season column
+    df['Movie release season'] = df['Movie release month'].apply(lambda x: 1 if x in [12, 1, 2] else 2 if x in [3, 4, 5] else 3 if x in [6, 7, 8] else 4)
+
+    return df
 
 def visualizing_data(df, split_year, genre):
     #reducing colums to see clearly
@@ -119,8 +211,8 @@ def visu_P2(df, split_year, genre):
 def plot_general(df): 
     
     season_mapping = {1: 'Winter', 2: 'Spring', 3: 'Summer', 4: 'Fall'}
-    df['season'] = df_vis['Movie release season'].map(season_mapping)
-    melted_df = pd.melt(df_vis, id_vars=['season'], value_vars=['genre 1', 'genre 2'], value_name='Genre_unique')
+    df['season'] = df['Movie release season'].map(season_mapping)
+    melted_df = pd.melt(df, id_vars=['season'], value_vars=['genre 1', 'genre 2'], value_name='Genre_unique')
     genre_season_counts = melted_df.groupby(['Genre_unique', 'season']).size().reset_index(name='Nombre de films')
 
     # Plot
