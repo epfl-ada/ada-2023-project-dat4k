@@ -30,6 +30,16 @@ Can we predict the season or month of release of a movie if we know all of its c
 
 ### Step 1 :
 
+  1) Processing the release date column
+  For our annual loop study, we used movies with release month excluding those without it. Movies from years with fewer than 200 releases are also removed. 
+
+  2) Processing the genre column
+  A filter and re-shaping process is done to extract more than 300 genres and categorize them into 8 main genres. We then associate each movie with up to two of these. 
+
+  3) Processing the country column
+  Same as 2, we classify movies into 5 continents.
+
+
 ### Step 2 : Getting to know the data, visualizations 
 
 We first show the global distribution of all genres in different seasons. Then we show the distribution of some specific genres over the months, looking for specific patterns. For example we found a pic in October for Horror movie that could be related to Halloween so we will run some others analysis.
@@ -45,6 +55,7 @@ We used t-test to get p-value and repeated this process with other genres and ot
 Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
 
 **Treated** : Horror movies released in October
+
 **Control** : Horror movies released in other months
 
 We think the main biais would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of horror movies in October regardless of how big the franchise is.
