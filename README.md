@@ -30,14 +30,16 @@ Can we predict the season or month of release of a movie if we know all of its c
 
 ### Step 1 :
 
-  1) Processing the release date column
-  For our annual loop study, we used movies with release month excluding those without it. Movies from years with fewer than 200 releases are also removed. 
+  1) Processing the release date column : For our annual loop study, we used movies with release month excluding those without it. Movies from years with fewer than 200 releases are also removed. 
 
-  2) Processing the genre column
-  A filter and re-shaping process is done to extract more than 300 genres and categorize them into 8 main genres. We then associate each movie with up to two of these. 
+  2) Processing the genre column : A filter and re-shaping process is done to extract more than 300 genres and categorize them into 8 main genres. We then associate each movie with up to two of these. 
 
-  3) Processing the country column
-  Same as 2, we classify movies into 5 continents.
+  3) Processing the country column : Same as 2, we classify movies into 5 continents.
+
+  4) Processing the box office revenue column : ...
+
+  5) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify analysis, we apply stemming and lemmatization, followed by the bag-of-words algorithm. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
+
 
 
 ### Step 2 : Getting to know the data, visualizations 
