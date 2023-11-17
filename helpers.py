@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import json 
 import ast
-
-
+ 
 
 def visualizing_data(df, split_year, genre):
     #reducing colums to see clearly
@@ -141,8 +140,69 @@ def plot_general(df):
     plt.show()
   
     
-    
+def plot_average_monthly_revenue(monthly_revenue_drama, monthly_revenue_comedy, monthly_revenue_romance, 
+                                 monthly_revenue_thriller, monthly_revenue_family, monthly_revenue_action, 
+                                 monthly_revenue_horror, monthly_revenue_informative):
+    # calculate the average revenue per month
+    average_monthly_revenue_drama = monthly_revenue_drama.groupby(level=0).mean()
+    average_monthly_revenue_comedy = monthly_revenue_comedy.groupby(level=0).mean()
+    average_monthly_revenue_romance = monthly_revenue_romance.groupby(level=0).mean()
+    average_monthly_revenue_thriller = monthly_revenue_thriller.groupby(level=0).mean()
+    average_monthly_revenue_family = monthly_revenue_family.groupby(level=0).mean()
+    average_monthly_revenue_action = monthly_revenue_action.groupby(level=0).mean()
+    average_monthly_revenue_horror = monthly_revenue_horror.groupby(level=0).mean()
+    average_monthly_revenue_informative = monthly_revenue_informative.groupby(level=0).mean()
+
+    average_monthly_revenue_drama.plot(kind='line', title='Average Box Office Revenue per Month for Different Genres', label='Drama')
+    average_monthly_revenue_comedy.plot(kind='line', label='Comedy')
+    average_monthly_revenue_romance.plot(kind='line', label='Romance')
+    average_monthly_revenue_thriller.plot(kind='line', label='Thriller')
+    average_monthly_revenue_family.plot(kind='line', label='Family')
+    average_monthly_revenue_action.plot(kind='line', label='Action')
+    average_monthly_revenue_horror.plot(kind='line', label='Horror')
+    average_monthly_revenue_informative.plot(kind='line', label='Informative')
+
+    plt.xlabel('Month')
+    plt.ylabel('Average Box Office Revenue')
+    plt.xticks(range(1, 13), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    plt.xlim(1, 12)
+    plt.legend()
+    plt.show()
 
     
+def plot_average_monthly_revenue_percentage(monthly_revenue_drama, monthly_revenue_comedy, monthly_revenue_romance, 
+                                 monthly_revenue_thriller, monthly_revenue_action, monthly_revenue_family, 
+                                 monthly_revenue_horror, monthly_revenue_informative):
+    total = monthly_revenue_drama + monthly_revenue_comedy + monthly_revenue_romance + monthly_revenue_thriller + monthly_revenue_action + monthly_revenue_family
 
-        
+    # Calculate the average revenue per month per movie
+    average_monthly_revenue_drama = monthly_revenue_drama.groupby(level=0).mean() / total*100
+    average_monthly_revenue_comedy = monthly_revenue_comedy.groupby(level=0).mean() / total*100
+    average_monthly_revenue_romance = monthly_revenue_romance.groupby(level=0).mean() / total*100
+    average_monthly_revenue_thriller = monthly_revenue_thriller.groupby(level=0).mean() / total*100
+    average_monthly_revenue_action = monthly_revenue_action.groupby(level=0).mean() / total*100
+    average_monthly_revenue_family = monthly_revenue_family.groupby(level=0).mean() / total*100
+    average_monthly_revenue_horror = monthly_revenue_horror.groupby(level=0).mean() / total*100
+    average_monthly_revenue_informative = monthly_revenue_informative.groupby(level=0).mean() / total*100
+
+    # plot the data
+    plt.plot(average_monthly_revenue_drama, label='Drama')
+    plt.plot(average_monthly_revenue_comedy, label='Comedy')
+    plt.plot(average_monthly_revenue_romance, label='Romance')
+    plt.plot(average_monthly_revenue_thriller, label='Thriller')
+    plt.plot(average_monthly_revenue_action, label='Action')
+    plt.plot(average_monthly_revenue_family, label='Family')
+    plt.plot(average_monthly_revenue_horror, label='Horror')
+    plt.plot(average_monthly_revenue_informative, label='Informative')
+
+    plt.xlabel('Month')
+    plt.ylabel('Percentage of Box Office Revenue per Genre')
+    plt.xticks(range(1, 13), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+    plt.title('Percentage of Box Office Revenue per Month for Different Genres')
+    plt.legend()
+
+    plt.xlim(1, 12)
+
+    plt.show()
+
+       
