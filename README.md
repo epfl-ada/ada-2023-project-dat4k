@@ -27,7 +27,7 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95.
 
-  - **Machine learning :** We implement KNN, random forest and logarithmic regression on our dataset. We then compute the following metrics : precision, recall and F1 score to choose the best-fitting model. We finally assess our results using k-fold cross-validation. 
+  - **Machine learning :** We implement KNN, random forest and logarithmic regression on our dataset. To do so first scale of the features, select the most relevant ones and split the data to obtain properly preprocessed train and test sets. We then compute the following metrics : precision, recall and F1 score to choose the best-fitting model. We finally assess our results using k-fold cross-validation. 
 
 
 ### Step 1 :
@@ -38,7 +38,7 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   3) Processing the country column : Same as 2, we classify movies into 5 continents.
 
-  4) Processing the box office revenue column : ...
+  4) Processing the box office revenue column : We remove the lines having a nan value for the box office revnue column.
 
   5) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify analysis, we apply stemming and lemmatization, followed by the bag-of-words algorithm. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
 
@@ -75,7 +75,7 @@ We used t-test to get p-value and repeated this process with other genres and ot
 
 In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
 
-  - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm.
+  - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm and for the logistic regression.
   - Randomly dividing the data into training and testing sets. The training set is used for model development, while the test set evaluates the model's efficiency.
   - Utilizing correlation-based feature selection to avoid overfitting and reduce computational complexity. This process retains features with the most significant variance.
   - Trying three distinct models—KNN, logistic regression, and random forest—to find the most accurate one. Tuning hyperparameters for each model before the comparison of metrics like accuracy, F1 score, and ROC curve.
