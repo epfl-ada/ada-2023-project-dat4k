@@ -17,6 +17,8 @@ Can we predict the season or month of release of a movie if we know all of its c
 
 ## Additional Dataset : 
 [**Vocabularies**](https://drive.google.com/drive/folders/1-KcpE8cju60CcNXWc_gPZ6x3V8r7T5eH?usp=share_link):  We chose to add this dataset which is three lists of positive, negative and violent adjectives. We will use it to classify movies by a plot analysis thanks to different algorithms.
+
+
 [**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it     
 
 
