@@ -21,8 +21,54 @@ Can we predict the season or month of release of a movie if we know all of its c
 
 [**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it     
 
+## Method : 
+
+  - **T-test :** We compare the means of the movies with a specific genre and released in a specific month, to the movies with the same specific genre but not released in this specific month. We then check if the difference between these means is statistically different.
+
+  - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95.
+
+  
+## Step 1 :
+
+## Step 2 : Getting to know the data, visualizations 
+
+We first show the global distribution of all genres in different seasons. Then we show the distribution of some specific genres over the months, looking for specific patterns. For example we found a pic in October for Horror movie that could be related to Halloween so we will run some others analysis.
+
+## Step 3 : Verifying observations with hypothesis testing 
+
+We separated the horror movie group in two groups: one is the horror movies in October grouped by year and the other is the horror movies released in other months than october divided by number of months and group by year.
+H0 = "Number of horror movies per year in October == Mean of number of horror movies per month (excluding october)  per year." 
+We used t-test to get p-value and repeated this process with other genres and other months.
+
+## Step 4 : Box office of Horror Movie ; Paired Matching 
+
+Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
+
+**Treated** : Horror movies released in October
+**Control** : Horror movies released in other months
+
+We think the main biais would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of horror movies in October regardless of how big the franchise is.
+To eliminate this biais, we take the budget as a feature.
+
+Secondly, an important biais is the continent of release. In fact, Halloween is celebrated at different degree of popularity. For example, Russian people don't even celebrate it, whereas It is a big event in the USA.
+For that reason we might want to match movies with the same continent of release.
+
+**Features to calculate the propensity score :**
+  - Budget 
+  - Country of release
+
+With the matched data, we will then observe if there is a tendency that treated data has higher box office than the box office of control data averaged on the other months.
 
 
+## Step 5 : Release season estimation using machine learning  
+
+In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
+
+  - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm.
+  - Randomly dividing the data into training and testing sets. The training set is used for model development, while the test set evaluates the model's efficiency.
+  - Utilizing correlation-based feature selection to avoid overfitting and reduce computational complexity. This process retains features with the most significant variance.
+  - Trying three distinct models—KNN, logistic regression, and random forest—to find the most accurate one. Tuning hyperparameters for each model before the comparison of metrics like accuracy, F1 score, and ROC curve.
+  - Assessing and validating results using k-fold cross-validation.
 
 
 ## Timeline :
