@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 import json 
 import ast
 
@@ -49,11 +50,11 @@ def genre_distribution_over_month(df, genre, film_counts_month, split_year, when
     plt.subplot(2, 1, 2)
     plt.bar(film_counts_month.index, genre_distrib.values/film_counts_month.values, color='blue')
     if when == 'c':
-        plt.title(f'Number of {genre} movie per month for all years')
+        plt.title(f'Ratio of {genre} movie per month for all years')
     elif when == 'b':
-        plt.title(f'Number of {genre} movie per month before {split_year}')
+        plt.title(f'Ratio of {genre} movie per month before {split_year}')
     elif when == 'a':
-        plt.title(f'Number of {genre} movie per month after {split_year}')
+        plt.title(f'Ratio of {genre} movie per month after {split_year}')
     plt.xlabel('Release month')
     plt.ylabel(f'ratio of {genre} movies ')
     plt.grid()
@@ -102,7 +103,7 @@ def visu_P2(df, split_year, genre):
     # Create the second subplot for the line plot
     plt.subplot(3, 1, 3)
     plt.bar(film_counts_month.index, genre_distrib.values/film_counts_month.values, color='blue')
-    plt.title(f'Number of {genre} movie per month after {split_year}')
+    plt.title(f'Ratio of {genre} movie per month after {split_year}')
     plt.xlabel('Release month')
     plt.ylabel(f'ratio of {genre} movies ')
     plt.grid()
@@ -113,6 +114,31 @@ def visu_P2(df, split_year, genre):
     # Show the plots
     plt.show()
     
+
+
+
+def plot_general(df): 
+    
+    season_mapping = {1: 'Winter', 2: 'Spring', 3: 'Summer', 4: 'Fall'}
+    df['season'] = df_vis['Movie release season'].map(season_mapping)
+    melted_df = pd.melt(df_vis, id_vars=['season'], value_vars=['genre 1', 'genre 2'], value_name='Genre_unique')
+    genre_season_counts = melted_df.groupby(['Genre_unique', 'season']).size().reset_index(name='Nombre de films')
+
+    # Plot
+    plt.figure(figsize=(12, 10))
+    plt.subplot(2,1,1)
+    sns.barplot(x='Genre_unique', y='Nombre de films', hue='season', data=genre_season_counts)
+    plt.title('Number of movies of each season for different genres')
+    plt.xlabel('Genre')
+    plt.ylabel('Number of movies')
+
+    plt.subplot(2,1,2)
+    sns.barplot(x='season', y='Nombre de films', hue='Genre_unique', data=genre_season_counts)
+    plt.title('Number of movies of each genre in every seasons')
+    plt.xlabel('Season of release')
+    plt.ylabel('Number of movies')
+    plt.xticks(ticks=[0, 1, 2, 3], labels=['Winter', 'Spring', 'Summer', 'Fall'])
+    plt.show()
   
     
     
