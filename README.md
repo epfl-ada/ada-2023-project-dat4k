@@ -27,7 +27,7 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95.
 
-  - **Machine learning** : ** We implement KNN, random forest and logarithmic regression on our dataset. We then compute the following metrics : precision, recall and F1 score to choose the best-fitting model. We finally assess our results using k-fold cross-validation. 
+  - **Machine learning :** We implement KNN, random forest and logarithmic regression on our dataset. We then compute the following metrics : precision, recall and F1 score to choose the best-fitting model. We finally assess our results using k-fold cross-validation. 
 
 
 ### Step 1 :
