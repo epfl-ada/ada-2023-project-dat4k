@@ -54,17 +54,15 @@ We used t-test to get p-value and repeated this process with other genres and ot
 
 ### Step 4 : Box office of Horror Movie ; Paired Matching 
 
-Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
+  - Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
+    **Treated** : Horror movies released in October
+    **Control** : Horror movies released in other months
 
-**Treated** : Horror movies released in October
+  We think the main biais would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of horror movies in October regardless of how big the franchise is.
+  To eliminate this biais, we take the budget as a feature.
 
-**Control** : Horror movies released in other months
-
-We think the main biais would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of horror movies in October regardless of how big the franchise is.
-To eliminate this biais, we take the budget as a feature.
-
-Secondly, an important biais is the continent of release. In fact, Halloween is celebrated at different degree of popularity. For example, Russian people don't even celebrate it, whereas It is a big event in the USA.
-For that reason we might want to match movies with the same continent of release.
+  - Secondly, an important biais is the continent of release. In fact, Halloween is celebrated at different degree of popularity. For example, Russian people don't even celebrate it, whereas It is a big event in the USA.
+  For that reason we might want to match movies with the same continent of release.
 
 **Features to calculate the propensity score :**
   - Budget 
