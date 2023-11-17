@@ -131,7 +131,7 @@ def reshape_genre_column(df,main_genres):
                                     df_clean_genre['genre 2'].iloc[index] = main_genre_value
                     #case where a sub genre belongs to more than one main genre: ex: 'Crime Comedy' (iloc[796])
                     if (boolarr.sum() ==2):
-                            if (df_clean_genre['genre 1'].iloc[index] == None and df_clean_genre['genre 2'].iloc[796] == None):
+                            if (df_clean_genre['genre 1'].iloc[index] == None and df_clean_genre['genre 2'].iloc[index] == None):
                                     df_clean_genre['genre 1'].iloc[index] = main_genres[boolarr]['main name'].iloc[0]
                                     df_clean_genre['genre 2'].iloc[index] = main_genres[boolarr]['main name'].iloc[1]
     # Drop the 'Movie genres' column
