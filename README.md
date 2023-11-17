@@ -27,20 +27,20 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95.
 
-  
-## Step 1 :
 
-## Step 2 : Getting to know the data, visualizations 
+### Step 1 :
+
+### Step 2 : Getting to know the data, visualizations 
 
 We first show the global distribution of all genres in different seasons. Then we show the distribution of some specific genres over the months, looking for specific patterns. For example we found a pic in October for Horror movie that could be related to Halloween so we will run some others analysis.
 
-## Step 3 : Verifying observations with hypothesis testing 
+### Step 3 : Verifying observations with hypothesis testing 
 
 We separated the horror movie group in two groups: one is the horror movies in October grouped by year and the other is the horror movies released in other months than october divided by number of months and group by year.
 H0 = "Number of horror movies per year in October == Mean of number of horror movies per month (excluding october)  per year." 
 We used t-test to get p-value and repeated this process with other genres and other months.
 
-## Step 4 : Box office of Horror Movie ; Paired Matching 
+### Step 4 : Box office of Horror Movie ; Paired Matching 
 
 Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
 
@@ -60,7 +60,7 @@ For that reason we might want to match movies with the same continent of release
 With the matched data, we will then observe if there is a tendency that treated data has higher box office than the box office of control data averaged on the other months.
 
 
-## Step 5 : Release season estimation using machine learning  
+### Step 5 : Release season estimation using machine learning  
 
 In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
 
