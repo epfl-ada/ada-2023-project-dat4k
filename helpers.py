@@ -7,7 +7,7 @@ import ast
  
 def select_years(df):
     # Drop nan values
-    df = df.dropna(subset=['Movie release date'])
+    df = df.dropna(subset=['Movie release date']).copy()  # Make a copy to avoid chained assignment
     # Add release year column
     df['Movie release year'] = df['Movie release date'].str[0:4]
     # Convert to numeric values
@@ -16,8 +16,8 @@ def select_years(df):
     df = df.sort_values('Movie release year', ascending=True) 
     # Drop the first row which has an error in the release year (1010)
     df = df.drop(df[df['Movie release year'] == 1010].index)
-    # Reset the indexation 
-    df = df.reset_index(drop = True)
+    # Reset the index
+    df = df.reset_index(drop=True)
 
     return df
 
