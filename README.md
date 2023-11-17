@@ -5,19 +5,22 @@ Welcome to the project dat4k
 #  And if we were in a time loop ?
 
 
-Research questions :
-Is there a statistically significant recurrence of specific film genres during particular seasons or months of the year? 
+## Abstract : 
+What if we were stuck in a time loop? This is the question we try to answer throughout this study. We conduct a temporal analysis of movies’ characteristics throughout the years, focusing on the identification of patterns repeating over and over again in cinematographic history.  We aim to recognize a potential influence of the release date of a movie on its type, its plot and its success. To achieve this goal, we focus our interest on the main genres of the films, their recurring characters, the grossing profit they bring and their plot summaries. We hope that we’ll manage to give you insights on the hidden mechanisms of the cinema industry!
+
+## Research questions :
+
+Is there a statistically significant recurrence of specific film genres during particular seasons or months of the year?
 Are there discernible patterns in the box office performance of specific film genres throughout the year, and do these patterns correlate with particular months?
-Are the film released a specific season takes place in this same season?
 Is there a relation between the connotation of the words and the season of release? For example, are there more positively connotated words in the plot of a movie in summer than in winter?
-Do certain clusters of character types exhibit recurring trends in films released during specific months? 
+Can we predict the season or month of release of a movie if we know all of its characteristics?
+
+## Additional Dataset : 
+[**Vocabularies**](https://drive.google.com/drive/folders/1-KcpE8cju60CcNXWc_gPZ6x3V8r7T5eH?usp=share_link):  We chose to add this dataset which is three lists of positive, negative and violent adjectives. We will use it to classify movies by a plot analysis thanks to different algorithms.
+[**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it     
 
 
 
-
-
-
-As our study is based on a potential annual loop, having access to the release month date is crucial. To achieve this, we exclude every movie that does not contain this information. We have decided to remove all movies from years where there are fewer than 200 releases. Observing a significant increase in the number of movies from 1980 onwards, we have chosen to separate the dataframes into two sub-dataframes: one for years before 1980 and the other for years after 1980
 
 
 ## Timeline :
