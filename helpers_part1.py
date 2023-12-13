@@ -5,7 +5,7 @@ import json
 import ast
 from datetime import datetime
 
-### Part 2.1) Link between horror movies and moth of release
+### Part 2.1) Link between horror movies and month of release
 
 def genre_distribution_over_month(df, genre, film_counts_month):  #df_genres, #Drama, #film_counts_month
     df_selected_gender=df[(df['genre 1'] == genre ) | (df['genre 2'] == genre)] #selecting genre

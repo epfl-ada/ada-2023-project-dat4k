@@ -9,7 +9,7 @@ import networkx as nx
 
 
 def extract_nb_countries(df):
-    # enlever un warning
+    # remove a warning
     pd.options.mode.chained_assignment = None  # default='warn'
 
     # Create an empty dataframe
