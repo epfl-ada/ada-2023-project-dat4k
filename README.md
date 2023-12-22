@@ -37,8 +37,6 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   4) Merging additional dataset: for step 4 (causal analysis), the budget needs to be taken into account, it is then merged to the main frame.
 
-  !BOUGER DE LA! 5) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify analysis, we apply stemming and lemmatization, followed by the bag-of-words algorithm. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
-
 
 
 ### Step 2 : Getting to know the data, visualizations 
@@ -76,14 +74,16 @@ A propensity score is used to match these confounders.
 With the matched data, we observe if there is a tendency that treated data has higher box office than the box office of control data averaged on the other months.
 
 
-### A CHANGER Step 5 : Release season estimation using machine learning  
+###  Step 5 : Release season estimation using machine learning  
+
+1) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify the analysis, we apply lemmatization, followed by the creation of the bag-of-words matrix. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
 
 In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
 
   - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm and for the logistic regression.
   - Randomly dividing the data into training and testing sets. The training set is used for model development, while the test set evaluates the model's efficiency.
   - Utilizing correlation-based feature selection to avoid over fitting and reduce computational complexity. This process retains features with the most significant variance.
-  - Trying three distinct models—KNN, logistic regression, and random forest—to find the most accurate one. Tuning hyper parameters for each model before the comparison of metrics like accuracy, F1 score, and ROC curve.
+  - Trying three distinct models—Boosted decision trees, logistic regression, and random forest—to find the most accurate one. We compare each model's accuracy with different hyperparameters to select the best one. 
   - Assessing and validating results using k-fold cross-validation.
 
 
