@@ -697,7 +697,7 @@ import json
 import ast
 import random
 
-
+from scipy import stats
 from datetime import datetime
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -935,5 +935,58 @@ def sentiment_analisis (df_sentiment,lines_plots,nlp, df_all):
     df_sentiment.to_csv(file_path, index=False)
 
     return df_sentiment
+
+
+def random_ttest(predictions, test):
+
+    model_scores=[]
+    random_classifier_scores=[]
+
+    for i in range(len(predictions)):   
+        if predictions[i] == test[i]:
+            model_scores.append(1)
+        else:
+            model_scores.append(0)
+        ran = random.randint(1,4)
+        if ran == test[i]:
+            random_classifier_scores.append(1)
+        else:
+            random_classifier_scores.append(0)
+    
+    t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
+
+    return t_statistic, p_value, random_classifier_scores, model_scores
      
+# Define a function for hyperparameter tuning and plotting
+def tune_and_plot(model, param_grid, model_name, param_name, X, Y):
+
+    kf = 5
+    
+    grid_search = GridSearchCV(model, param_grid, cv=kf, scoring='accuracy')
+    grid_search.fit(X, Y)
+    
+    # Extract the relevant information from the results
+    param_values = param_grid[param_name]
+    mean_scores = grid_search.cv_results_['mean_test_score']
+    
+    # Plot the results
+    plt.figure(figsize=(10, 6))
+    plt.plot(param_values, mean_scores, marker='o')
+    plt.title(f'{model_name} - {param_name} Tuning')
+    plt.xlabel(f'{param_name}')
+    plt.ylabel('Mean Accuracy')
+    plt.grid(True)
+    plt.show()
+
+def what_would_be_significant(random_classifier_scores, model_scores):
+    accs= [0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.35]
+    alpha = 0.05
+
+    num_samples = int(23700*0.2)
+
+    for acc in accs:
+        
+        model_scores = np.random.binomial(1, acc, num_samples)
+        t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
+        print(f"Accuracy: {acc} p-value: {p_value} significant: {p_value < alpha}")
 
