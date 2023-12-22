@@ -7,6 +7,7 @@ import scipy.stats
 import ast
 import calendar
 import networkx as nx
+import re
 
 ##### MONTH PROCESSING HELPERS
 
@@ -684,6 +685,75 @@ def paired_matching(df):
     
     return balanced_df, balanced_treatment, balanced_control
 
+### MACHINE LEARNING ###
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import nltk
+import re
+import seaborn as sns
+import json 
+import ast
+import random
+
+
+from datetime import datetime
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import CountVectorizer
+from IPython.display import display
+from nltk.corpus import wordnet
+
+#from nltk.corpus import wordnet
+from itertools import chain
+
+#Vader
+import vaderSentiment
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+#Scikit imports
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
+from sklearn.utils import shuffle
+from sklearn.feature_extraction.text import TfidfVectorizer
+nltk.download('wordnet')
+
+nltk.download('stopwords')
+nltk.download('punkt')
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', 50)
+
+# Load WordNet synsets for each season-related category
+summer_synsets = wordnet.synsets('summer')
+winter_synsets = wordnet.synsets('winter')
+fall_synsets = wordnet.synsets('fall')
+spring_synsets = wordnet.synsets('spring')
+# Extract words from synsets
+summer_words = set([lemma.name() for synset in summer_synsets for lemma in synset.lemmas()])
+winter_words = set([lemma.name() for synset in winter_synsets for lemma in synset.lemmas()])
+fall_words = set([lemma.name() for synset in fall_synsets for lemma in synset.lemmas()])
+spring_words = set([lemma.name() for synset in spring_synsets for lemma in synset.lemmas()])
+# Combine all seasonal words into one list
+all_seasonal_words = list(summer_words.union(winter_words, fall_words))
+
+# Filter the list to include only words found in WordNet
+valid_seasonal_words = [word for word in all_seasonal_words if wordnet.synsets(word)]
+
+# Print the valid seasonal words
+#print("Valid Seasonal Words:", valid_seasonal_words)
+
 def boxplots(genre_movies, treatment, control):
 
      # Create three subplots side by side
@@ -715,3 +785,155 @@ def boxplots(genre_movies, treatment, control):
     print('\n')
     print_mean_std(treatment, control, 'Movie release year')
     print('\n')
+
+def lexical():
+     # Spring-related words
+    spring_lexicon = [
+        'blossom', 'bloom', 'thaw', 'rain', 'sprout', 'garden', 'sunshine',
+        'renewal', 'fresh', 'growth', 'bud', 'warmth', 'green', 'nature',
+        'cherry', 'lilac', 'daffodil', 'tulip', 'pastel', 'bees', 'butterfly',
+        'songbird', 'new','life', 'sunbeam', 'gentle','breeze', 'blossom', 'spring','reborn'
+    ]
+
+    # Summer-related words
+    summer_lexicon = [
+        'sunshine', 'heat', 'beach', 'vacation', 'barbecue', 'swim', 'sunny',
+        'warm', 'leisure', 'picnic', 'relaxation', 'holiday', 'tan',
+        'surfing', 'sandcastle', 'palm', 'ice_cream', 'flip_flops', 'sunglasses','summer',
+        'heatwave', 'fireworks', 'tropical', 'sundress', 'sunset', 'poolside', 'independence'
+    ]
+
+    # Autumn (Fall)-related words
+    autumn_lexicon = [
+        'foliage', 'harvest', 'cool', 'pumpkin', 'cider', 'crisp', 'colorful',
+        'sweater', 'apple', 'acorn', 'cozy', 'spice', 'hayride', 'autumnal',
+        'cornucopia', 'cranberry', 'cornmaze', 'fireside', 'windy','atumn',
+        'hoodie', 'mushroom', 'chestnut', 'sweater','weather', 'mild_temperature', 'plaid','orange','leaves','halloween'
+    ]
+
+        # Winter-related words
+    winter_lexicon = [
+        'snow', 'frost', 'ice', 'holiday', 'fireplace', 'cozy', 'festive', 'chill', 'Hanukkah',
+        'mitten', 'scarf', 'celebrate', 'snowflake', 'hibernate', 'wonderland',
+        'icicle', 'penguin', 'mittens', 'cocoa', 'blanket','ski','chairlift','christmas','santa','claus','romantic','valentine','roses','sex'
+        'evergreen', 'frosty_morning', 'winter','solstice', 'snowstorm', 'jingle', 'toasty', 'snowy'
+    ]
+
+    # Valentine's Day related words
+    valentines_day_lexicon = ["valentine", "romance", "cupid",  "flowers"]
+
+    # Christmas related words
+    christmas_lexicon = ["christmas", "holiday", "santa", "gift", "tree", "ornament", "jingle", "bell", "sleigh", "merry"]
+
+    # New Year's related words
+    new_years_lexicon = ["new year", "celebrate", "countdown", "party", "fireworks", "resolution"]
+
+    halloween_lexicon = ["halloween", "spooky", "ghost", "witch", "pumpkin", "candy", "costume", "trick", "haunt", "skeleton","fear","scared","horror"]
+
+    autumn_celebrations_lexicon = ["autumn", "Thanksgiving", "Halloween", "harvest", "turkey", "pilgrims"]
+
+    spring_celebrations_lexicon = ["spring", "Easter", "Passover", "blossom", "renewal", "bunny", "egg","chocolate"]
+
+    # Combine all lexicons
+    winter_lexicon = winter_lexicon + valentines_day_lexicon + christmas_lexicon + new_years_lexicon
+
+    autumn_lexicon = autumn_lexicon + autumn_celebrations_lexicon+halloween_lexicon
+
+    spring_lexicon = spring_lexicon + spring_celebrations_lexicon
+
+    # Combine all lexicons
+    season_lexicon = spring_lexicon + summer_lexicon + autumn_lexicon + winter_lexicon
+
+
+
+    # Function to get synonyms from WordNet
+    def get_synonyms(word):
+        synonyms = set()
+        for syn in wordnet.synsets(word):
+            for lemma in syn.lemmas():
+                synonyms.add(lemma.name())
+        return list(synonyms)
+
+    # Expand the season-related lexicons with synonyms
+    expanded_spring_lexicon = list(chain.from_iterable([spring_word] + get_synonyms(spring_word) for spring_word in spring_lexicon))
+    expanded_summer_lexicon = list(chain.from_iterable([summer_word] + get_synonyms(summer_word) for summer_word in summer_lexicon))
+    expanded_autumn_lexicon = list(chain.from_iterable([autumn_word] + get_synonyms(autumn_word) for autumn_word in autumn_lexicon))
+    expanded_winter_lexicon = list(chain.from_iterable([winter_word] + get_synonyms(winter_word) for winter_word in winter_lexicon))
+
+    # Combine all expanded lexicons
+    expanded_season_lexicon = expanded_spring_lexicon + expanded_summer_lexicon + expanded_autumn_lexicon + expanded_winter_lexicon
+
+    return expanded_season_lexicon
+
+
+def text_analisis(lines_plots, lexique, nlp, df):
+     
+    #tokenized_summaries = {}
+    movie_ids = []
+    processed_corpus = []
+
+    for line in lines_plots:
+        # Split each line into movie ID and summary
+        parts = re.split('[\t ]', line, 1)
+        if len(parts) == 2:
+            movie_id, summary = parts
+            movie_id = int(movie_id)
+            if movie_id in df['Wikipedia movieID'].values:  
+                #stemmed_words = [porter.stem(word) for word in words] 
+                doc = nlp(summary)
+                processed_tokens=[]
+                for token in doc:               
+                    if token.lemma_ in lexique:
+                        processed_tokens.extend([token.lemma_])  
+                if len(processed_tokens)>0:
+                    movie_ids.append(movie_id)
+                    processed_summary = ' '.join(processed_tokens)# for token in doc if token in expanded_season_lexicon])# and token.pos_ != '-PRON-'])
+                    processed_corpus.append(processed_summary)
+
+    vectorizer = CountVectorizer()
+
+    bow_matrix = vectorizer.fit_transform(processed_corpus)
+    bow_array = bow_matrix.toarray()
+    matrix = bow_array
+
+    # Normalize each row by the number of elements
+    matrix = np.divide(bow_array, bow_array.sum(axis=1, keepdims=True))
+
+    #As the loop takes a lot of time, we save the obtained matrix as a df.csv
+    MAT = pd.DataFrame(matrix, columns=vectorizer.get_feature_names_out())
+    MAT.insert(0, 'Movie ID', movie_ids)
+    MAT.to_csv('Data/BOW.csv', index=False)
+
+    return MAT
+
+def sentiment_analisis (df_sentiment,lines_plots,nlp, df_all):
+
+    for line in lines_plots:
+        parts = re.split('[\t ]', line, 1)
+        if len(parts) == 2:
+
+            #Separation of the movie ID and its plot summary
+            movie_id, summary = parts
+            movie_id = int(movie_id)
+
+            # Check if the movie is present in movie.metadata.genres.tsv
+            if movie_id in df_all['Wikipedia movieID'].values:
+                
+                #NLP processing
+                doc = nlp(summary)
+
+                #Calculus of sentiments coefficients
+                analyzer = SentimentIntensityAnalyzer()
+                vs = analyzer.polarity_scores(doc.text)
+                
+                #Adding complete rows to df_sentiment
+                new_line = ({'Movie_ID' : movie_id, 'Positive' : vs['pos'], 'Negative' : vs['neg'], 'Compound' : vs['compound'], 'Neutral' : vs['neu']})
+                df_sentiment = pd.concat([df_sentiment, pd.DataFrame([new_line])], ignore_index=True)     
+
+    #As the loop takes a long time to run we save the dataframe obtain into a csv file
+    file_path = 'Data\df_sentiment.csv'
+    df_sentiment.to_csv(file_path, index=False)
+
+    return df_sentiment
+     
+
