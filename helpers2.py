@@ -8,6 +8,9 @@ import ast
 import calendar
 import networkx as nx
 import re
+import statsmodels.formula.api as smf
+import plotly.express as px
+from plotly.subplots import make_subplots 
 
 ##### MONTH PROCESSING HELPERS
 
@@ -1055,6 +1058,8 @@ def tune_and_plot(model, param_grid, model_name, param_name, X, Y):
     plt.grid(True)
     plt.show()
 
+    return param_values,mean_scores
+
 def what_would_be_significant(random_classifier_scores, model_scores):
 
     #array of possible values for our accuracy
@@ -1067,5 +1072,5 @@ def what_would_be_significant(random_classifier_scores, model_scores):
     for acc in accs:
         model_scores = np.random.binomial(1, acc, num_samples)
         t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
-        print(f"Accuracy: {acc} p-value: {p_value} significant: {p_value < alpha}")
+        #print(f"Accuracy: {acc} p-value: {p_value} significant: {p_value < alpha}")
 
