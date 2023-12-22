@@ -687,12 +687,8 @@ def paired_matching(df):
 
 ### MACHINE LEARNING ###
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import nltk
 import re
-import seaborn as sns
 import json 
 import ast
 import random
@@ -704,8 +700,6 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from IPython.display import display
 from nltk.corpus import wordnet
-
-#from nltk.corpus import wordnet
 from itertools import chain
 
 #Vader
@@ -728,8 +722,8 @@ from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import shuffle
 from sklearn.feature_extraction.text import TfidfVectorizer
-nltk.download('wordnet')
 
+nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
 pd.set_option('display.max_rows', None)
@@ -740,32 +734,34 @@ summer_synsets = wordnet.synsets('summer')
 winter_synsets = wordnet.synsets('winter')
 fall_synsets = wordnet.synsets('fall')
 spring_synsets = wordnet.synsets('spring')
+
 # Extract words from synsets
 summer_words = set([lemma.name() for synset in summer_synsets for lemma in synset.lemmas()])
 winter_words = set([lemma.name() for synset in winter_synsets for lemma in synset.lemmas()])
 fall_words = set([lemma.name() for synset in fall_synsets for lemma in synset.lemmas()])
 spring_words = set([lemma.name() for synset in spring_synsets for lemma in synset.lemmas()])
+
 # Combine all seasonal words into one list
 all_seasonal_words = list(summer_words.union(winter_words, fall_words))
 
 # Filter the list to include only words found in WordNet
 valid_seasonal_words = [word for word in all_seasonal_words if wordnet.synsets(word)]
 
-# Print the valid seasonal words
-#print("Valid Seasonal Words:", valid_seasonal_words)
+
 
 def boxplots(genre_movies, treatment, control):
 
-     # Create three subplots side by side
+    # Create three subplots side by side
     fig, axes = plt.subplots(2, 2, figsize=(15, 10))
     df = genre_movies[['Movie box office revenue','budget', 'Movie release year']]
+
     # Plot each boxplot on a separate subplot
     for i, column in enumerate(df.columns[:2]):
-        #df.boxplot(column=column, ax=axes[i], grid=True)
+
         genre_movies.boxplot(by='treat', column=column, ax=axes[0, i], figsize = [5, 5], grid=True)
         axes[0, i].set_title(f'Boxplot for {column}', fontsize= 16)
         axes[0, i].set_xlabel('treat', fontsize= 14)
-        #axes[i].set_ylabel('Values')
+
     # Plot a single boxplot for the third group below
     genre_movies.boxplot(by='treat', column='Movie release year', ax=axes[1, 0], grid=True)
     axes[1, 0].set_title(f'Boxplot for Movie release year', fontsize=16)
@@ -773,6 +769,7 @@ def boxplots(genre_movies, treatment, control):
 
     # Hide the empty subplot in the second row and second column
     axes[1, 1].axis('off')
+
     #Adjust layout to prevent overlapping
     plt.tight_layout()
 
@@ -787,7 +784,8 @@ def boxplots(genre_movies, treatment, control):
     print('\n')
 
 def lexical():
-     # Spring-related words
+
+    # Spring-related words
     spring_lexicon = [
         'blossom', 'bloom', 'thaw', 'rain', 'sprout', 'garden', 'sunshine',
         'renewal', 'fresh', 'growth', 'bud', 'warmth', 'green', 'nature',
@@ -811,7 +809,7 @@ def lexical():
         'hoodie', 'mushroom', 'chestnut', 'sweater','weather', 'mild_temperature', 'plaid','orange','leaves','halloween'
     ]
 
-        # Winter-related words
+    # Winter-related words
     winter_lexicon = [
         'snow', 'frost', 'ice', 'holiday', 'fireplace', 'cozy', 'festive', 'chill', 'Hanukkah',
         'mitten', 'scarf', 'celebrate', 'snowflake', 'hibernate', 'wonderland',
@@ -828,23 +826,22 @@ def lexical():
     # New Year's related words
     new_years_lexicon = ["new year", "celebrate", "countdown", "party", "fireworks", "resolution"]
 
+    # Halloween's related words
     halloween_lexicon = ["halloween", "spooky", "ghost", "witch", "pumpkin", "candy", "costume", "trick", "haunt", "skeleton","fear","scared","horror"]
 
+    # Autumn's related words
     autumn_celebrations_lexicon = ["autumn", "Thanksgiving", "Halloween", "harvest", "turkey", "pilgrims"]
 
+    # Spring's related words
     spring_celebrations_lexicon = ["spring", "Easter", "Passover", "blossom", "renewal", "bunny", "egg","chocolate"]
 
     # Combine all lexicons
     winter_lexicon = winter_lexicon + valentines_day_lexicon + christmas_lexicon + new_years_lexicon
-
     autumn_lexicon = autumn_lexicon + autumn_celebrations_lexicon+halloween_lexicon
-
     spring_lexicon = spring_lexicon + spring_celebrations_lexicon
 
     # Combine all lexicons
     season_lexicon = spring_lexicon + summer_lexicon + autumn_lexicon + winter_lexicon
-
-
 
     # Function to get synonyms from WordNet
     def get_synonyms(word):
@@ -868,18 +865,19 @@ def lexical():
 
 def text_analisis(lines_plots, lexique, nlp, df):
      
-    #tokenized_summaries = {}
     movie_ids = []
     processed_corpus = []
 
     for line in lines_plots:
+
         # Split each line into movie ID and summary
         parts = re.split('[\t ]', line, 1)
+
+        #Complete movie_ids and processed_corpus by running nlp and then check for each word of each plot summary if it corresponds to a word of lexique
         if len(parts) == 2:
             movie_id, summary = parts
             movie_id = int(movie_id)
-            if movie_id in df['Wikipedia movieID'].values:  
-                #stemmed_words = [porter.stem(word) for word in words] 
+            if movie_id in df['Wikipedia movieID'].values: 
                 doc = nlp(summary)
                 processed_tokens=[]
                 for token in doc:               
@@ -887,7 +885,7 @@ def text_analisis(lines_plots, lexique, nlp, df):
                         processed_tokens.extend([token.lemma_])  
                 if len(processed_tokens)>0:
                     movie_ids.append(movie_id)
-                    processed_summary = ' '.join(processed_tokens)# for token in doc if token in expanded_season_lexicon])# and token.pos_ != '-PRON-'])
+                    processed_summary = ' '.join(processed_tokens)
                     processed_corpus.append(processed_summary)
 
     vectorizer = CountVectorizer()
@@ -942,6 +940,7 @@ def random_ttest(predictions, test):
     model_scores=[]
     random_classifier_scores=[]
 
+    #Loop that complete two arrays with scores of our model and scores of random application 
     for i in range(len(predictions)):   
         if predictions[i] == test[i]:
             model_scores.append(1)
@@ -953,11 +952,11 @@ def random_ttest(predictions, test):
         else:
             random_classifier_scores.append(0)
     
+    #run a t-test to obtain the p-value
     t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
 
     return t_statistic, p_value, random_classifier_scores, model_scores
      
-# Define a function for hyperparameter tuning and plotting
 def tune_and_plot(model, param_grid, model_name, param_name, X, Y):
 
     kf = 5
@@ -979,13 +978,15 @@ def tune_and_plot(model, param_grid, model_name, param_name, X, Y):
     plt.show()
 
 def what_would_be_significant(random_classifier_scores, model_scores):
+
+    #array of possible values for our accuracy
     accs= [0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.35]
     alpha = 0.05
 
-    num_samples = int(23700*0.2)
+    #test sample size
+    num_samples = int(23727*0.2)
 
     for acc in accs:
-        
         model_scores = np.random.binomial(1, acc, num_samples)
         t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
         print(f"Accuracy: {acc} p-value: {p_value} significant: {p_value < alpha}")
