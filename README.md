@@ -82,7 +82,7 @@ With the matched data, we observe if there is a tendency that treated data has h
 
 In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
 
-  - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm and for the logistic regression.
+  - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the logistic regression algorithm for example.
   - Randomly dividing the data into training and testing sets. The training set is used for model development, while the test set evaluates the model's efficiency.
   - Utilizing correlation-based feature selection to avoid over fitting and reduce computational complexity. This process retains features with the most significant variance.
   - Trying three distinct models—Boosted decision trees, logistic regression, and random forest—to find the most accurate one. We compare each model's accuracy with different hyperparameters to select the best one. 
