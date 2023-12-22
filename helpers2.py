@@ -40,11 +40,6 @@ def dataframe_with_months (df):
     df = df.reset_index(drop = True)
     return df
 
-'''def select_main_years(df1,df2):
-    film_counts_year_without_missing_months = df2['Movie release year'].value_counts().sort_index()
-    years_under_200 = film_counts_year_without_missing_months.index[film_counts_year_without_missing_months.values > 200]
-    df1 = df1[df1['Movie release year'].isin(years_under_200)]
-    return df1'''
 
 def select_main_years(df1):
     '''
@@ -685,6 +680,89 @@ def paired_matching(df):
     
     return balanced_df, balanced_treatment, balanced_control
 
+def lin_regression(df):
+
+    # Fit the linear regression model
+    df['Movie_box_office_revenue'] = df['Movie box office revenue']
+    model = smf.ols(formula  = 'Movie_box_office_revenue ~ treat', data = df)
+    results = model.fit()
+
+    # plot the linear regression line
+    sns.barplot(x=df['treat'], y=results.fittedvalues, errorbar='sd', data=df)
+
+    # Set labels and title
+    plt.xlabel('Treat')
+    plt.ylabel('Movie Box Office Revenue')
+    plt.title('Linear regression')
+    plt.xticks([0, 1])
+
+    # Show the plot
+    plt.show()
+
+def confounder_distribution(df, treat_col ,confounder1, confounder2, balanced=False):
+    # Box plot of confounder1 for treatment and control group after matching
+    #balanced_df.boxplot(by='treat', column='confounder1', figsize = [5, 5], grid=True)
+
+    data = px.data.tips()
+
+    if (balanced == False):
+        when = 'before'
+    else:
+        when = 'after'
+
+
+    # Create a box plot with plotly.express
+
+    fig = make_subplots(rows=1, cols=2, subplot_titles=[
+            f'Boxplot for budget {when} matching', f'Boxplot for release year {when} matching'], horizontal_spacing = 0.1)
+
+    fig1 = px.box(df, x=treat_col, y=confounder1, points="all")
+    fig2 = px.box(df, x=treat_col, y=confounder2, points="all", color_discrete_sequence=['#1f77b4'])
+
+    for trace in fig1.data:
+        fig.add_trace(trace, row=1, col=1)
+
+        
+        
+    for trace in fig2.data:
+        fig.add_trace(trace, row=1, col=2)
+
+
+    # Update layout
+    fig.update_layout(height=400, width=1100, showlegend = True )
+    #ig.update_layout(title_text="Occurancies of Horror movies", title_font=dict(size=16))
+
+
+    # Récupérer les noms des axes des graphiques individuels
+    xaxis_title_1 = fig1.layout.xaxis.title.text
+    yaxis_title_1 = fig1.layout.yaxis.title.text
+    xaxis_title_2 = fig2.layout.xaxis.title.text
+    yaxis_title_2 = fig2.layout.yaxis.title.text
+
+
+    # Attribuer les noms des axes aux sous-graphiques
+    fig.update_xaxes(title_text=xaxis_title_1, row=1, col=1)
+    fig.update_yaxes(title_text=yaxis_title_1, row=1, col=1)
+    fig.update_xaxes(title_text=xaxis_title_2, row=1, col=2)
+    fig.update_yaxes(title_text=yaxis_title_2, row=1, col=2)
+
+
+    # Update title font size for each subplot
+    fig.update_xaxes(title_font=dict(size=12), row=1, col=1)
+    fig.update_yaxes(title_font=dict(size=12), row=1, col=1)
+    fig.update_xaxes(title_font=dict(size=12), row=1, col=2)
+    fig.update_yaxes(title_font=dict(size=12), row=1, col=2)
+
+    fig.update_annotations(font_size=12)
+    if (df['genre 1'].iloc[0]=='Horror' or df['genre 2'].iloc[0]=='Horror'):
+        dataframe = 'Horror'
+    elif (df['genre 1'].iloc[0]=='Family film' or df['genre 2'].iloc[0]=='Family film'):
+        dataframe = 'Family'
+    fig.update_layout(title_text=f"Distribution of {dataframe} movies confounders for treated and control group", title_font=dict(size=16))
+
+
+    fig.show()
+
 ### MACHINE LEARNING ###
 
 import nltk
@@ -956,7 +1034,7 @@ def random_ttest(predictions, test):
     t_statistic, p_value = stats.ttest_ind(random_classifier_scores, model_scores)
 
     return t_statistic, p_value, random_classifier_scores, model_scores
-     
+
 def tune_and_plot(model, param_grid, model_name, param_name, X, Y):
 
     kf = 5

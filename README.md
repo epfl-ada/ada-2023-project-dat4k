@@ -9,28 +9,25 @@ Welcome to the project dat4k
 What if we were stuck in a time loop? This is the question we try to answer throughout this study. We conduct a temporal analysis of movies’ characteristics throughout the years and the months, focusing on the identification of patterns repeating over and over again in cinematographic history.  We aim to recognize a potential influence of the release date of a movie on its type, its plot and its success. To achieve this goal, we focus our interest on the main genres of the films, their recurring characters, the grossing profit they bring and their plot summaries. We hope that we’ll manage to give you insights on the hidden mechanisms of the cinema industry!
 
 ## Research questions :
-
 Is there a statistically significant recurrence of specific film genres during particular seasons or months of the year?
 Are there discernible patterns in the box office performance of specific film genres throughout the year, and do these patterns correlate with particular months?
-Is there a relation between the connotation of the words and the season of release? For example, are there more positively connotated words in the plot of a movie in summer than in winter?
+Is there a relation between the connotation of the words and the season of release? For example, are there more positively connoted words in the plot of a movie in summer than in winter?
 Can we predict the season or month of release of a movie if we know all of its characteristics?
 
 ## Additional Dataset : 
-[**Vocabularies**](https://drive.google.com/drive/folders/1-KcpE8cju60CcNXWc_gPZ6x3V8r7T5eH?usp=share_link):  We chose to add this dataset which is three lists of positive, negative and violent adjectives. We will use it to classify movies by a plot analysis thanks to different algorithms.
 
-
-[**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it     
+[**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it.     
 
 ## Method : 
 
   - **T-test :** We compare the means of the movies with a specific genre and released in a specific month, to the movies with the same specific genre but not released in this specific month. We then check if the difference between these means is statistically different.
 
-  - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95.
+  - **Paired Matching :**  We use paired matching to check for causality in observed correlations. To match the two groups we standardize the continuous variables, calculate propensity scores and match, based on genre and propensity score with a threshold of >0.95. 
 
   - **Machine learning :** We implement KNN, random forest and logarithmic regression on our dataset. To do so first scale of the features, select the most relevant ones and split the data to obtain properly preprocessed train and test sets. We then compute the following metrics : precision, recall and F1 score to choose the best-fitting model. We finally assess our results using k-fold cross-validation. 
 
 
-### Step 1 :
+### Step 1 : Filtering and processing data
 
   1) Processing the release date column : For our annual loop study, we used movies with release month excluding those without it. Movies from years with fewer than 200 releases are also removed. 
 
@@ -38,9 +35,9 @@ Can we predict the season or month of release of a movie if we know all of its c
 
   3) Processing the country column : Same as 2, we classify movies into 5 continents.
 
-  4) Processing the box office revenue column : We remove the lines having a nan value for the box office revnue column.
+  4) Merging additional dataset: for step 4 (causal analysis), the budget needs to be taken into account, it is then merged to the main frame.
 
-  5) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify analysis, we apply stemming and lemmatization, followed by the bag-of-words algorithm. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
+  !BOUGER DE LA! 5) Processing the plot summaries : We aim to link the temporal setting of movies with their release time by counting occurrences of specific words (e.g., winter, summer) in plot summaries. To simplify analysis, we apply stemming and lemmatization, followed by the bag-of-words algorithm. This enables us to visualize word prevalence in plots throughout the year, revealing insights into potential patterns.
 
 
 
@@ -50,35 +47,43 @@ We first show the global distribution of all genres in different seasons. Then w
 
 ### Step 3 : Verifying observations with hypothesis testing 
 
-For exemple we separate the horror movie group in two groups: one is the horror movies in October grouped by year and the other is the horror movies released in other months than october divided by number of months and group by year.
+For example we separate the horror movie group in two groups: one is the horror movies in October grouped by year and the other is the horror movies released in other months than october divided by number of months and group by year.
 H0 = "Number of horror movies per year in October == Mean of number of horror movies per month (excluding october)  per year." 
-We used t-test to get p-value and repeated this process with other genres and other months
+We used t-test to get p-value and repeated this process with other genres and other months.
 
-### Step 4 : Box office of Horror Movie ; Paired Matching 
+### Step 4 : Causal analysis, does the film industry support the time loop ?
 
-  - Check if having the higher box office for horror films is caused by the fact that they're released in October (check the influence of Halloween).
+In Step 3, we found significant result for the Horror and Family movie genres: for particular months, their number increases. The next step is to determine the reason why there are more movies during these specific months. A possible hypothesis would be that movies are more successful during their months of predilection.
 
-    **Treated** : Horror movies released in October
+In order to verify or not this hypothesis, we will check if releasing a Horror movie in October (Halloween is 31st of October) implies a greater box-office revenue. The same analysis will be done for Family films (in July, November and December).
 
-    **Control** : Horror movies released in other months
+  **Treated** : Horror movies released in October/ Family films released in July, November, or December
 
-  We think the main biais would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of horror movies in October regardless of how big the franchise is.
-  To eliminate this biais, we take the budget as a feature.
+  **Control** : Horror movies released in other months/ Family films not released in July, November, or December
 
-  - Secondly, an important biais is the continent of release. In fact, Halloween is celebrated at different degree of popularity. For example, Russian people don't even celebrate it, whereas It is a big event in the USA.
-  For that reason we might want to match movies with the same continent of release.
+**Confounders:**
 
-  The features chosen to calculate the propensity score are the Budget and the Country of release. With the matched data, we will then observe if there is a tendency that treated data has higher box office than the box office of control data averaged on the other months.
+- We think the main bias would be that box office is influenced by when the big franchise movies are released. We’re interested in the success of movies regardless of how big the franchise is.
+To eliminate this bias, we take the budget as a feature.
+
+- An important bias is the continent of release. In fact, Halloween is celebrated at different degree of popularity. For example, Russian people don't even celebrate it, whereas It is a big event in the USA. Regarding Family movies, the holiday season also depends on the continent.
+For that reason we might match movies with the same continent of release.
+
+- Finally, we take into account the release year of the movie, to eliminate to influence of inflation over the years.
+
+A propensity score is used to match these confounders. 
+
+With the matched data, we observe if there is a tendency that treated data has higher box office than the box office of control data averaged on the other months.
 
 
-### Step 5 : Release season estimation using machine learning  
+### A CHANGER Step 5 : Release season estimation using machine learning  
 
 In this final phase, we aim to construct a generalized model based on observed correlations between temporal aspects and movie characteristics. The objective is to predict a movie's release season (Autumn, Winter, Spring, Summer) using classifying algorithms. Our approach involves: 
 
   - Scaling features to prevent undue importance on larger-scale attributes (e.g., box office revenue vs. movie runtime). Encoding categorical features for distance computation in the KNN algorithm and for the logistic regression.
   - Randomly dividing the data into training and testing sets. The training set is used for model development, while the test set evaluates the model's efficiency.
-  - Utilizing correlation-based feature selection to avoid overfitting and reduce computational complexity. This process retains features with the most significant variance.
-  - Trying three distinct models—KNN, logistic regression, and random forest—to find the most accurate one. Tuning hyperparameters for each model before the comparison of metrics like accuracy, F1 score, and ROC curve.
+  - Utilizing correlation-based feature selection to avoid over fitting and reduce computational complexity. This process retains features with the most significant variance.
+  - Trying three distinct models—KNN, logistic regression, and random forest—to find the most accurate one. Tuning hyper parameters for each model before the comparison of metrics like accuracy, F1 score, and ROC curve.
   - Assessing and validating results using k-fold cross-validation.
 
 
@@ -91,14 +96,11 @@ In this final phase, we aim to construct a generalized model based on observed c
 
 08.12 : ML classification algorithm
 
-10.12 : In parrallel, draft for data story
+10.12 : In parallel, draft for data story
 
 12.12 : develop website
 
 18.12 : finalize website and data story
-
-
-
 
 
 ## Contributions of the team members 👨‍👩‍👧‍👧
@@ -110,31 +112,29 @@ In this final phase, we aim to construct a generalized model based on observed c
 <thead>
   <tr>
     <th class="tg-0lax"></th>
-    <th class="tg-0lax">Tasks until P3</th>
+    <th class="tg-0lax">Contributions</th>
   </tr>
 </thead>
 <tbody>
   <tr>
     <td class="tg-0lax">@Remidesire</td>
-    <td class="tg-0lax">Implement the classification algorithms<br><br>Develop the web interface</td>
+    <td class="tg-0lax">Pre-processed the date column<br><br>Implemented the classification algorithms<br>Developed the final text for the data story<br></td>
   </tr>
   <tr>
     <td class="tg-0lax">@julpiro</td>
-    <td class="tg-0lax">Implement the paired matching<br><br>Create meaningful visualizations<br><br>Develop the web interface</td>
+    <td class="tg-0lax">Implemented the paired matching<br><br>Created meaningful visualizations<br><br>Develop the web interface</td>
   </tr>
   <tr>
     <td class="tg-0lax">@CesarCams</td>
-    <td class="tg-0lax">Implement the classification algorithms<br><br>Develop the final text for the data story</td>
+    <td class="tg-0lax">Processed the box office revenue<br><br>Implemented the classification algorithms<br><br>Developed the final text for the data story</td>
   </tr>
   <tr>
     <td class="tg-0lax">@ninalahellec</td>
-    <td class="tg-0lax">Continue working on t-test<br><br>Develop the final text for the data story<br><br>Implement paired matching</td>
+    <td class="tg-0lax">Pre-processed the genre column<br><br>Developed the final text for the data story<br><br>Implemented paired matching</td>
   </tr>
   <tr>
     <td class="tg-0lax">@jdrouet27</td>
-    <td class="tg-0lax">Create meaningful visualizations<br><br>Continue working on t-test<br><br>Develop the web interface</td>
+    <td class="tg-0lax">Created meaningful visualizations<br><br>Developed t-test<br><br>Developed the web interface</td>
   </tr>
 </tbody>
 </table>
-
-
