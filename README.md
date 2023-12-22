@@ -14,6 +14,8 @@ Are there discernible patterns in the box office performance of specific film ge
 Is there a relation between the connotation of the words and the season of release? For example, are there more positively connoted words in the plot of a movie in summer than in winter?
 Can we predict the season or month of release of a movie if we know all of its characteristics?
 
+A more detailed description as well as our results can be found in our [**data story**](https://jdrouet27.github.io/ada-template-website_Dat4k/).
+
 ## Additional Dataset : 
 
 [**Budget**](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?resource=download&select=movies_metadata.csv): We will use this dataset to verify if for two similar movies the difference of box office is due to the release date or to the investment accorded to it.     
